@@ -53,9 +53,14 @@ const Coleta = {
       <div class="form-group"><label class="form-label">Data</label><p>${UI.formatDate(c.data)}</p></div>
     `;
     const footer = `
-      <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Fechar</button>
-      <button class="btn btn--primary" onclick="UI.closeModal();Coleta.openForm('${c.id}')">Editar</button>
-      <button class="btn btn--danger" onclick="UI.closeModal();Coleta.remove('${c.id}')">🗑</button>
+      <div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">
+        ${CameraHelper.botaoFotos('coletas', c.id)}
+        <div style="display:flex;gap:var(--space-xs)">
+          <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Fechar</button>
+          <button class="btn btn--primary" style="flex:1" onclick="UI.closeModal();Coleta.openForm('${c.id}')">Editar</button>
+          <button class="btn btn--danger" onclick="UI.closeModal();Coleta.remove('${c.id}')">🗑</button>
+        </div>
+      </div>
     `;
     UI.showModal(c.equipamento, body, footer);
   },

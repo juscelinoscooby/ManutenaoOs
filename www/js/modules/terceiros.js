@@ -32,12 +32,15 @@ const Terceiros = {
     container.innerHTML = filtered.map(t =>
       '<div class="card-os" onclick="Terceiros.openDetail(\'' + t.id + '\')">' +
       '<div class="card-os__header">' +
-      '<span class="badge">' + (t.responsavel || 'J') + '</span>' +
-      '<span class="badge badge--' + t.status + '">' + (t.status || 'Pendente') + '</span>' +
+      '<span class="badge">' + UI.esc(t.responsavel || 'Juscelino') + '</span>' +
+      UI.statusBadge(t.status || 'pendente') +
       '</div>' +
       '<h3 class="card-os__title">' + UI.esc(t.empresa || '') + '</h3>' +
       '<p class="card-os__desc">' + UI.esc(t.servico || '') + '</p>' +
-      '<div class="card-os__meta"><span>📅 ' + UI.formatDateShort(t.prazo || '') + '</span></div>' +
+      '<div class="card-os__meta">' +
+      '<span>📍 ' + UI.esc(t.local || 'N/I') + '</span>' +
+      '<span>📅 ' + UI.formatDateShort(t.data || t.prazo || '') + '</span>' +
+      '</div>' +
       '</div>'
     ).join('');
   },
@@ -49,17 +52,21 @@ const Terceiros = {
     const body =
       '<div class="form-group"><label class="form-label">Nome da Empresa</label><p>' + UI.esc(t.empresa || '') + '</p></div>' +
       '<div class="form-group"><label class="form-label">Local do Serviço</label><p>' + UI.esc(t.local || 'Não informado') + '</p></div>' +
+      '<div class="form-group"><label class="form-label">Status</label>' + UI.statusBadge(t.status || 'pendente') + '</div>' +
       '<div class="form-group"><label class="form-label">Serviço a ser Executado</label><p>' + UI.esc(t.servico || '') + '</p></div>' +
       '<div class="form-row">' +
-      '<div class="form-group"><label class="form-label">Data / Hora</label><p>' + UI.formatDate(t.data) + ' às ' + (t.hora || '—') + '</p></div>' +
+      '<div class="form-group"><label class="form-label">Data / Hora</label><p>' + UI.formatDateShort(t.data || t.prazo) + (t.hora ? ' às ' + UI.esc(t.hora) : '') + '</p></div>' +
       '</div>';
 
     const footer =
+      '<div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">' +
+      '<button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Terceiros.shareWhatsApp(\'' + t.id + '\')">📱 Enviar para o WhatsApp</button>' +
+      CameraHelper.botaoFotos('terceiros', t.id) +
       '<div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs)">' +
       '<button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Fechar</button>' +
-      '<button class="btn btn--primary" style="flex:1" onclick="UI.closeModal();Terceiros.openForm(\'' + t.id + '\')">Editar</button>' +
+      '<button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal();Terceiros.openForm(\'' + t.id + '\')">Editar</button>' +
       '<button class="btn btn--danger" onclick="UI.closeModal();Terceiros.remove(\'' + t.id + '\')">🗑</button>' +
-      '</div>';
+      '</div></div>';
 
     UI.showModal(t.empresa || 'Terceiro', body, footer);
   },
@@ -71,9 +78,9 @@ const Terceiros = {
     const horaAtual = now.toTimeString().slice(0,5);
 
     const body =
-      '<div class="form-group"><label class="form-label">Nome da Empresa *</label><input class="form-input" id="form-empresa" value="' + (t ? t.empresa : '') + '" placeholder="Empresa terceirizada"></div>' +
-      '<div class="form-group"><label class="form-label">Local do Serviço *</label><input class="form-input" id="form-local" value="' + (t ? t.local : '') + '" placeholder="Local onde será executado"></div>' +
-      '<div class="form-group"><label class="form-label">Serviço a ser Executado *</label><textarea class="form-textarea" id="form-servico" placeholder="Serviço a ser executado...">' + (t ? t.servico : '') + '</textarea></div>' +
+      '<div class="form-group"><label class="form-label">Nome da Empresa *</label><input class="form-input" id="form-empresa" value="' + (t ? UI.esc(t.empresa || '') : '') + '" placeholder="Empresa terceirizada"></div>' +
+      '<div class="form-group"><label class="form-label">Local do Serviço *</label><input class="form-input" id="form-local" value="' + (t ? UI.esc(t.local || '') : '') + '" placeholder="Local onde será executado"></div>' +
+      '<div class="form-group"><label class="form-label">Serviço a ser Executado *</label><textarea class="form-textarea" id="form-servico" placeholder="Serviço a ser executado...">' + (t ? UI.esc(t.servico || '') : '') + '</textarea></div>' +
       '<div class="form-row">' +
       '<div class="form-group"><label class="form-label">Status</label>' +
       '<select class="form-select" id="form-status">' +
@@ -81,8 +88,8 @@ const Terceiros = {
       '<option value="em_andamento" ' + (t && t.status === 'em_andamento' ? 'selected' : '') + '>Em andamento</option>' +
       '<option value="concluido" ' + (t && t.status === 'concluido' ? 'selected' : '') + '>Concluído</option>' +
       '</select></div>' +
-      '<div class="form-group"><label class="form-label">Data</label><input class="form-input" type="date" id="form-data" value="' + (t ? t.data : hoje) + '"></div>' +
-      '<div class="form-group"><label class="form-label">Hora</label><input class="form-input" type="time" id="form-hora" value="' + (t ? (t.hora || '') : horaAtual) + '"></div></div>';
+      '<div class="form-group"><label class="form-label">Data</label><input class="form-input" type="date" id="form-data" value="' + (t ? UI.esc(t.data || '') : hoje) + '"></div>' +
+      '<div class="form-group"><label class="form-label">Hora</label><input class="form-input" type="time" id="form-hora" value="' + (t ? UI.esc(t.hora || '') : horaAtual) + '"></div></div>';
 
     const footer =
       '<button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>' +
@@ -135,7 +142,7 @@ const Terceiros = {
     const formattedText = this.formatWhatsApp(t);
 
     const body = '<p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">Relatório formatado para o WhatsApp:</p>' +
-      '<textarea id="wa-text-area" style="min-height:200px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)">' + UI.esc(formattedText) + '</textarea>';
+      '<textarea id="wa-text-area" class="form-textarea" style="min-height:200px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>' + UI.esc(formattedText) + '</textarea>';
 
     const footer =
       '<div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">' +

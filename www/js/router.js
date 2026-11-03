@@ -64,16 +64,23 @@ const Router = {
 
   /** "Mais" page: grid of all routes */
   renderMais(view) {
-    const maisRoutes = ['vistorias', 'coleta', 'inventario', 'atendimentos', 'reparos', 'terceiros'];
+    const maisRoutes = ['relatorios', 'vistorias', 'coleta', 'inventario', 'atendimentos', 'reparos', 'terceiros'];
     let html = '<div class="stat-grid">';
     maisRoutes.forEach(r => {
       const info = CONFIG.routes[r];
+      if (!info) return;
       html += `
         <div class="stat-card" style="cursor:pointer" onclick="window.location.hash='${r}'">
           <div class="stat-card__icon">${info.icon}</div>
           <div class="stat-card__label">${info.title}</div>
         </div>`;
     });
+    html += `
+      <div class="stat-card" style="cursor:pointer" onclick="UI.openBackupModal()">
+        <div class="stat-card__icon">💾</div>
+        <div class="stat-card__label">Backup e Exportação</div>
+      </div>
+    `;
     html += '</div>';
     view.innerHTML = html;
   },

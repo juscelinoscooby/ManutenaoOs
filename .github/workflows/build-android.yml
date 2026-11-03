@@ -47,13 +47,17 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build web assets
         run: npm run build 2>/dev/null || echo "No build script, using www/ as-is"
 
-      - name: Sync Capacitor
-        run: npx cap sync android
+      - name: Add and Sync Capacitor Android
+        run: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+          npx cap sync android
 
       - name: Build Debug APK
         run: |
@@ -61,10 +65,20 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
-      - name: Build Release APK
+      - name: Build & Sign Release APK
         run: |
           cd android
           ./gradlew assembleRelease --no-daemon
+          RELEASE_DIR="app/build/outputs/apk/release"
+          if [ -f "$RELEASE_DIR/app-release-unsigned.apk" ] && [ ! -f "$RELEASE_DIR/app-release.apk" ]; then
+            KEYSTORE="$HOME/.android/debug.keystore"
+            if [ ! -f "$KEYSTORE" ]; then
+              mkdir -p "$HOME/.android"
+              keytool -genkey -v -keystore "$KEYSTORE" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+            fi
+            APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -n 1)
+            "$APKSIGNER" sign --ks "$KEYSTORE" --ks-pass pass:android --key-pass pass:android --out "$RELEASE_DIR/app-release.apk" "$RELEASE_DIR/app-release-unsigned.apk"
+          fi
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4

@@ -60,6 +60,7 @@ const Inventario = {
 
     const footer = '<div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">' +
       '<button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Inventario.shareWhatsApp(\'' + i.id + '\')">📱 Enviar para o WhatsApp</button>' +
+      CameraHelper.botaoFotos('inventario', i.id) +
       '<div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs)">' +
       '<button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Fechar</button>' +
       '<button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal();Inventario.openForm(\'' + i.id + '\')">Editar</button>' +
@@ -94,9 +95,9 @@ const Inventario = {
     let itensRows = '';
     itemsList.forEach((it, idx) => {
       itensRows += '<div class="item-row" style="background:var(--surface-alt);padding:var(--space-sm);border-radius:var(--radius-sm);margin-bottom:var(--space-sm)">' +
-        '<div class="form-group" style="margin-bottom:var(--space-xs)"><label class="form-label">Item ' + (idx + 1) + '</label><input class="form-input item-nome" value="' + (it.nome || '') + '" placeholder="Nome do item"></div>' +
-        '<div class="form-group" style="margin-bottom:var(--space-xs)"><label class="form-label">Descrição do Item</label><input class="form-input item-descricao" value="' + (it.descricao || '') + '" placeholder="Detalhes"></div>' +
-        '<div class="form-row" style="margin-bottom:0"><div class="form-group" style="margin-bottom:0"><label class="form-label">Local</label><input class="form-input item-local" value="' + (it.local || '') + '" placeholder="Local"></div>' +
+        '<div class="form-group" style="margin-bottom:var(--space-xs)"><label class="form-label">Item ' + (idx + 1) + '</label><input class="form-input item-nome" value="' + UI.esc(it.nome || '') + '" placeholder="Nome do item"></div>' +
+        '<div class="form-group" style="margin-bottom:var(--space-xs)"><label class="form-label">Descrição do Item</label><input class="form-input item-descricao" value="' + UI.esc(it.descricao || '') + '" placeholder="Detalhes"></div>' +
+        '<div class="form-row" style="margin-bottom:0"><div class="form-group" style="margin-bottom:0"><label class="form-label">Local</label><input class="form-input item-local" value="' + UI.esc(it.local || '') + '" placeholder="Local"></div>' +
         '<div class="form-group" style="margin-bottom:0"><label class="form-label">Status</label>' +
         '<select class="form-select item-status"><option value="Operacional"' + (it.status === 'Operacional' ? ' selected' : '') + '>Operacional</option>' +
         '<option value="Em Paliativo"' + (it.status === 'Em Paliativo' ? ' selected' : '') + '>Em Paliativo</option>' +
@@ -104,11 +105,11 @@ const Inventario = {
         '</div>';
     });
 
-    const body = '<div class="form-group"><label class="form-label">Descrição do Inventário *</label><input class="form-input" id="form-descricao" value="' + (i ? i.descricao : '') + '" placeholder="Ex: Setor Elétrico"></div>' +
+    const body = '<div class="form-group"><label class="form-label">Descrição do Inventário *</label><input class="form-input" id="form-descricao" value="' + (i ? UI.esc(i.descricao) : '') + '" placeholder="Ex: Setor Elétrico"></div>' +
       '<div class="form-group" style="margin-top:var(--space-md)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-xs)"><label class="form-label" style="margin:0">Itens do Inventário</label>' +
       '<button type="button" class="btn btn--primary" style="font-size:.8rem;padding:4px 10px;min-height:32px" onclick="Inventario.addItemRow()">+ Adicionar Item</button></div>' +
       '<div id="itens-container" style="max-height:280px;overflow-y:auto;padding-right:4px">' + itensRows + '</div></div>' +
-      '<input type="hidden" id="form-data" value="' + (i ? i.data : hoje) + '">';
+      '<input type="hidden" id="form-data" value="' + (i ? UI.esc(i.data) : hoje) + '">';
 
     const footer = '<button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>' +
       '<button class="btn btn--primary" style="flex:1" onclick="Inventario.save(\'' + (id || '') + '\')">Salvar e Gerar Relatório</button>';
@@ -148,7 +149,7 @@ const Inventario = {
   },
 
   formatWhatsApp(i) {
-    let text = 'RELATORIO DE INVETARIO ' + ((i.descricao || '').toUpperCase()) + '\n';
+    let text = 'RELATÓRIO DE INVENTÁRIO ' + ((i.descricao || '').toUpperCase()) + '\n';
     text += '---------------------------------------------------------------------------------------\n';
     (i.itens || []).forEach(it => {
       text += '- ' + it.nome + ' | ' + it.local + '\n';
@@ -163,7 +164,7 @@ const Inventario = {
     if (!i) return;
     const formattedText = this.formatWhatsApp(i);
     const body = '<p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">Relatório formatado para o WhatsApp:</p>' +
-      '<textarea id="wa-text-area" style="min-height:220px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)">' + UI.esc(formattedText) + '</textarea>';
+      '<textarea id="wa-text-area" class="form-textarea" style="min-height:220px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>' + UI.esc(formattedText) + '</textarea>';
     const footer = '<div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">' +
       '<button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Inventario.sendToWhatsApp(\'' + i.id + '\')">📱 Enviar para o WhatsApp</button>' +
       '<button class="btn btn--secondary btn--full" onclick="Inventario.copyToClipboard()">📋 Copiar Texto</button>' +

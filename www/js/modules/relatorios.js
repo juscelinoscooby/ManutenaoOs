@@ -6,7 +6,11 @@ const Relatorios = {
       <div class="tabs" id="rel-tabs">
         <span class="tab active" data-filter="all">Todos</span>
         <span class="tab" data-filter="Mensal">Mensais</span>
-        <span class="tab" data-filter="Semanal">Semais</span>
+        <span class="tab" data-filter="Semanal">Semanais</span>
+      </div>
+      <div style="display:flex;gap:var(--space-sm);margin-bottom:var(--space-md)">
+        <button class="btn btn--secondary" style="flex:1;min-height:36px;font-size:.8rem" onclick="ExportHelper.exportarCSV('relatorios')">📊 Exportar CSV</button>
+        <button class="btn btn--secondary" style="flex:1;min-height:36px;font-size:.8rem" onclick="ExportHelper.imprimirRelatorio('Relatórios de Manutenção')">🖨️ Imprimir</button>
       </div>
       <div id="rel-list"></div>
       ${UI.fab('➕', 'Relatorios.openForm()')}

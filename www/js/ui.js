@@ -108,8 +108,47 @@ const UI = {
     document.getElementById('menu-btn').addEventListener('click', () => this.toggleSidebar());
     document.getElementById('overlay').addEventListener('click', () => this.closeSidebar());
     document.getElementById('sync-btn').addEventListener('click', () => {
-      this.toast('Dados sincronizados', 'success');
+      this.openBackupModal();
     });
+  },
+
+  /** Modal de Backup, Restauração e Exportação */
+  openBackupModal() {
+    const body = `
+      <div style="display:flex;flex-direction:column;gap:var(--space-sm)">
+        <p class="text-sm text-muted">Gerencie os dados salvos no dispositivo, exporte planilhas CSV ou gere cópias de segurança.</p>
+        <button class="btn btn--primary btn--full" onclick="ExportHelper.exportarBackupJSON()">
+          💾 Baixar Backup Completo (JSON)
+        </button>
+        <button class="btn btn--secondary btn--full" onclick="ExportHelper.importarBackupJSON()">
+          📂 Restaurar Backup (JSON)
+        </button>
+        <button class="btn btn--secondary btn--full" onclick="UI.closeModal();ExportHelper.imprimirRelatorio(document.getElementById('page-title')?.textContent || 'Relatório')">
+          🖨️ Imprimir Tela Atual
+        </button>
+        <div class="form-group" style="margin-top:var(--space-sm);margin-bottom:0;border-top:1px solid var(--border);padding-top:var(--space-sm)">
+          <label class="form-label">📊 Exportar Módulo para Excel (CSV)</label>
+          <div style="display:flex;gap:var(--space-xs)">
+            <select class="form-select" id="export-csv-collection" style="flex:1">
+              <option value="atividades">Atividades</option>
+              <option value="rotinas_execucoes">Execuções de Rotinas</option>
+              <option value="vistorias">Vistorias</option>
+              <option value="atendimentos">Atendimentos</option>
+              <option value="reparos">Reparos</option>
+              <option value="inventario">Inventário</option>
+              <option value="coletas">Coleta de Dados</option>
+              <option value="relatorios">Relatórios</option>
+              <option value="terceiros">Terceiros</option>
+            </select>
+            <button class="btn btn--primary" onclick="ExportHelper.exportarCSV(document.getElementById('export-csv-collection').value)">
+              Exportar
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    const footer = `<button class="btn btn--secondary btn--full" onclick="UI.closeModal()">Fechar</button>`;
+    this.showModal('↻ Dados, Backup & Exportação', body, footer);
   },
 };
 

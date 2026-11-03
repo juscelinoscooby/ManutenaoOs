@@ -135,8 +135,8 @@ const Store = {
     ];
 
     this._data.terceiros = [
-      { id: this._uid(), empresa: 'TechService Ltda', servico: 'Calibração de instrumentos', status: 'em_andamento', prazo: now, responsavel: 'Ana' },
-      { id: this._uid(), empresa: 'ManutPro', servico: 'Reparo de quadro elétrico', status: 'pendente', prazo: now, responsavel: 'Juscelino' },
+      { id: this._uid(), empresa: 'TechService Ltda', local: 'Laboratório / Instrumentação', servico: 'Calibração de instrumentos', status: 'em_andamento', data: '2026-10-31', hora: '09:00', prazo: now, responsavel: 'Ana' },
+      { id: this._uid(), empresa: 'ManutPro', local: 'Subestação Principal', servico: 'Reparo de quadro elétrico', status: 'pendente', data: '2026-10-31', hora: '14:00', prazo: now, responsavel: 'Juscelino' },
     ];
   },
 };

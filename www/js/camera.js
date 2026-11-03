@@ -95,22 +95,41 @@ const CameraHelper = {
     UI.showModal('📷 Fotos do Registro', body, footer);
   },
 
-  async _addFotoModal(collection, id) {
+  _addFotoModal(collection, id) {
     UI.closeModal();
     const rec = Store.getById(collection, id);
     if (!rec) return;
-    const body = `
-      <div class="form-group">
-        <label class="form-label">Legenda da foto (opcional)</label>
-        <input class="form-input" id="foto-legenda" placeholder="Ex: Detalhe do defeito">
-      </div>
-      <p class="text-sm text-muted">Tirando foto...</p>
-    `;
-    UI.showModal('Nova Foto', body);
+    setTimeout(() => {
+      const body = `
+        <div class="form-group">
+          <label class="form-label">Legenda da foto (opcional)</label>
+          <input class="form-input" id="foto-legenda" placeholder="Ex: Detalhe do defeito">
+        </div>
+      `;
+      const footer = `
+        <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>
+        <button class="btn btn--primary" style="flex:1" onclick="CameraHelper._confirmAddFoto('${collection}','${id}')">📷 Capturar Foto</button>
+      `;
+      UI.showModal('Nova Foto', body, footer);
+    }, 260);
+  },
+
+  async _confirmAddFoto(collection, id) {
     const legenda = document.getElementById('foto-legenda')?.value.trim() || '';
-    await this.adicionarFoto(collection, id, legenda);
     UI.closeModal();
-    setTimeout(() => this.verFotos(collection, id), 250);
+    await this.adicionarFoto(collection, id, legenda);
+    setTimeout(() => this.verFotos(collection, id), 260);
+  },
+
+  /** Renderiza botão de fotos para modais de detalhes */
+  botaoFotos(collection, id) {
+    const rec = Store.getById(collection, id);
+    const qtd = (rec && rec.fotos) ? rec.fotos.length : 0;
+    return `
+      <button class="btn btn--secondary btn--full" onclick="UI.closeModal();setTimeout(() => CameraHelper.verFotos('${collection}','${id}'), 260)">
+        📷 Fotos (${qtd})
+      </button>
+    `;
   },
 
   /** Inicia captura e retorna dataUrl (uso direto nos módulos) */

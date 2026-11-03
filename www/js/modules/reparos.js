@@ -65,6 +65,7 @@ const Reparos = {
         <button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Reparos.shareWhatsApp('${r.id}')">
           📱 Enviar para o WhatsApp
         </button>
+        ${CameraHelper.botaoFotos('reparos', r.id)}
         <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs)">
           <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Fechar</button>
           <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal();Reparos.openForm('${r.id}')">Editar</button>

@@ -274,6 +274,7 @@ const Checklists = {
         <button class="btn btn--secondary btn--full" onclick="Checklists.copyToClipboard()">
           📋 Copiar Texto
         </button>
+        ${CameraHelper.botaoFotos('rotinas_execucoes', id)}
         <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs)">
           <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Fechar</button>
           <button class="btn btn--danger" onclick="UI.closeModal();Checklists.removeExecution('${id}')">🗑 Excluir</button>
@@ -287,10 +288,16 @@ const Checklists = {
   formatExecutionWhatsApp(ex) {
     let text = `-----------------------------------------------------------------\n`;
     text += `*${ex.descricaoAtividade}*\n`;
-    text += `*Status:* ${ex.statusGeral}\n`;
+    text += `*Status:* ${(ex.statusGeral || '').toUpperCase()}\n`;
     text += `*Data e hora:* ${ex.data} ${ex.hora}\n`;
     if (ex.resumo && ex.resumo.trim()) {
       text += `*Resumo:* ${ex.resumo}\n`;
+    }
+    if (ex.tarefas && ex.tarefas.length > 0) {
+      text += `\n*Tarefas Verificadas:*\n`;
+      ex.tarefas.forEach(t => {
+        text += `• ${t.tarefa}: *${(t.status || '').toUpperCase()}*\n`;
+      });
     }
     text += `-----------------------------------------------------------------`;
     return text;
