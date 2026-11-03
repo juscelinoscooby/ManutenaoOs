@@ -1,0 +1,11 @@
+{
+  "appId": "com.tecnicojuscelino.manutencaoos",
+  "appName": "Manutenção OS",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "Camera": {
+      "saveToCameraRoll": false
+    }
+  }
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a73e8">
+  <meta name="description" content="Gestão de manutenção, ordens de serviço, checklists e vistorias">
+  <title>Manutenção OS</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar / Drawer -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__logo">⚙️</div>
+        <div class="sidebar__titles">
+          <h1>Manutenção OS</h1>
+          <span class="sidebar__creator">Técnico Juscelino</span>
+        </div>
+      </div>
+      <nav class="sidebar__nav" id="nav">
+        <a href="#dashboard" class="nav-item active" data-route="dashboard">
+          <span class="nav-item__icon">📊</span> Dashboard
+        </a>
+        <a href="#atividade" class="nav-item" data-route="atividade">
+          <span class="nav-item__icon">📝</span> Registro de Atividade
+        </a>
+        <a href="#checklists" class="nav-item" data-route="checklists">
+          <span class="nav-item__icon">✅</span> Rotinas Diárias
+        </a>
+        <a href="#relatorios" class="nav-item" data-route="relatorios">
+          <span class="nav-item__icon">📄</span> Relatórios
+        </a>
+        <a href="#vistorias" class="nav-item" data-route="vistorias">
+          <span class="nav-item__icon">🔍</span> Vistorias
+        </a>
+        <a href="#coleta" class="nav-item" data-route="coleta">
+          <span class="nav-item__icon">📡</span> Coleta de Dados
+        </a>
+        <a href="#inventario" class="nav-item" data-route="inventario">
+          <span class="nav-item__icon">📦</span> Inventário
+        </a>
+        <a href="#atendimentos" class="nav-item" data-route="atendimentos">
+          <span class="nav-item__icon">🛠️</span> Registro de Atendimentos
+        </a>
+        <a href="#reparos" class="nav-item" data-route="reparos">
+          <span class="nav-item__icon">🔧</span> Registro de Reparos
+        </a>
+        <a href="#terceiros" class="nav-item" data-route="terceiros">
+          <span class="nav-item__icon">🤝</span> Acompanhamento de Terceiros
+        </a>
+      </nav>
+      <div class="sidebar__footer">
+        <span class="sidebar__version">v1.0.0</span>
+      </div>
+    </aside>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main content -->
+    <main class="main" id="main">
+      <header class="topbar">
+        <button class="icon-btn" id="menu-btn" aria-label="Menu">☰</button>
+        <div class="topbar__title">
+          <h2 id="page-title">Dashboard</h2>
+          <span id="page-subtitle">Visão geral do sistema</span>
+        </div>
+        <div class="topbar__actions">
+          <button class="icon-btn" id="sync-btn" aria-label="Sincronizar" title="Sincronizar">↻</button>
+          <div class="avatar" id="user-avatar">J</div>
+        </div>
+      </header>
+
+      <section class="view" id="view-dashboard">
+        <!-- Preenchido via JS -->
+      </section>
+    </main>
+
+    <!-- Bottom navigation (mobile) -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <a href="#dashboard" class="bottom-nav__item active" data-route="dashboard">
+        <span>📊</span> Início
+      </a>
+      <a href="#atividade" class="bottom-nav__item" data-route="atividade">
+        <span>📝</span> Atividade
+      </a>
+      <a href="#checklists" class="bottom-nav__item" data-route="checklists">
+        <span>✅</span> Rotinas
+      </a>
+      <a href="#inventario" class="bottom-nav__item" data-route="inventario">
+        <span>📦</span> Inventário
+      </a>
+      <a href="#mais" class="bottom-nav__item" data-route="mais">
+        <span>⋮</span> Mais
+      </a>
+    </nav>
+  </div>
+
+  <!-- Templates -->
+  <template id="card-os-template">
+    <div class="card-os">
+      <div class="card-os__header">
+        <span class="badge" data-field="tipo"></span>
+        <span class="badge badge--status" data-field="status"></span>
+      </div>
+      <h3 class="card-os__title" data-field="nome"></h3>
+      <p class="card-os__desc" data-field="desc"></p>
+      <div class="card-os__meta">
+        <span data-field="local"></span>
+        <span data-field="data"></span>
+      </div>
+    </div>
+  </template>
+
+  <script src="js/config.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/modules/dashboard.js"></script>
+  <script src="js/modules/atividade.js"></script>
+  <script src="js/modules/checklists.js"></script>
+  <script src="js/modules/relatorios.js"></script>
+  <script src="js/modules/vistorias.js"></script>
+  <script src="js/modules/coleta.js"></script>
+  <script src="js/modules/inventario.js"></script>
+  <script src="js/modules/atendimentos.js"></script>
+  <script src="js/modules/reparos.js"></script>
+  <script src="js/modules/terceiros.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Service Worker (PWA) — não interfere no modo Capacitor nativo
+    if ('serviceWorker' in navigator && !window.Capacitor) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>
