@@ -42,6 +42,7 @@ const Atividade = {
         </div>
         <h3 class="card-os__title">${UI.esc(a.nome)}</h3>
         <p class="card-os__desc">${UI.esc(a.desc)}</p>
+        ${CameraHelper.htmlCardThumbs(a)}
         <div class="card-os__meta">
           <span>📍 ${UI.esc(a.local || 'N/I')}</span>
           <span>🕐 ${UI.formatDateShort(a.data)}</span>
@@ -78,6 +79,7 @@ const Atividade = {
         <label class="form-label">🛠️ Serviços Executados</label>
         <ul style="padding-left:18px;font-size:.9rem">${servicosList}</ul>
       </div>
+      ${CameraHelper.htmlDetailThumbs('atividades', a.id)}
     `;
 
     const footer = `
@@ -152,6 +154,7 @@ const Atividade = {
         <label class="form-label">🛠️ Serviços Executados por Linha (1 por linha)</label>
         <textarea class="form-textarea" id="form-servicos" placeholder="Limpeza e reaperto dos bornes&#10;Substituição do filtro" style="min-height:100px">${a ? UI.esc(a.servicos || '') : ''}</textarea>
       </div>
+      ${CameraHelper.htmlFormFotos('atividades', id)}
     `;
 
     const footer = `
@@ -261,7 +264,8 @@ const Atividade = {
       <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">
         Relatório formatado para o WhatsApp:
       </p>
-      <textarea id="wa-text-area" class="form-textarea" style="min-height:240px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      <textarea id="wa-text-area" class="form-textarea" style="min-height:200px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      ${CameraHelper.htmlDetailThumbs('atividades', id)}
     `;
 
     const footer = `
@@ -269,6 +273,7 @@ const Atividade = {
         <button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Atividade.sendToWhatsApp('${id}')">
           📱 Enviar para o WhatsApp
         </button>
+        ${CameraHelper.botaoFotos('atividades', id)}
         <button class="btn btn--secondary btn--full" onclick="Atividade.copyToClipboard()">
           📋 Copiar Texto
         </button>

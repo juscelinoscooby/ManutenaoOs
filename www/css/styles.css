@@ -101,6 +101,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--primary-light);
   border-radius: var(--radius-md);
 }
+.sidebar__logo-img {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  box-shadow: var(--shadow-sm);
+}
 .sidebar__titles h1 { font-size: 1.1rem; font-weight: 700; color: var(--text); }
 .sidebar__creator { font-size: .75rem; color: var(--text-muted); }
 
@@ -548,3 +554,79 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
+
+/* ===== Photo Thumbnails Grid ===== */
+.fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+.foto-thumb {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-dark);
+  background: var(--surface-alt);
+  aspect-ratio: 4 / 3;
+}
+.foto-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.foto-thumb__remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: rgba(217, 48, 37, 0.9);
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+.foto-thumb__caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-thumbs {
+  display: flex;
+  gap: 6px;
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-xs);
+  overflow-x: auto;
+}
+.card-thumbs img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.modal__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.modal__back {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-light);
+}

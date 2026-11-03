@@ -38,6 +38,7 @@ const Coleta = {
           <strong style="font-size:1.1rem">${UI.esc(c.valor)}</strong>
         </div>
         <h3 class="card-os__title">${UI.esc(c.equipamento)}</h3>
+        ${CameraHelper.htmlCardThumbs(c)}
         <div class="card-os__meta"><span>🕐 ${UI.formatDateShort(c.data)}</span></div>
       </div>
     `).join('');
@@ -51,6 +52,7 @@ const Coleta = {
       <div class="form-group"><label class="form-label">Parâmetro</label><p>${UI.esc(c.parametro)}</p></div>
       <div class="form-group"><label class="form-label">Valor Medido</label><p style="font-size:1.2rem;font-weight:700">${UI.esc(c.valor)}</p></div>
       <div class="form-group"><label class="form-label">Data</label><p>${UI.formatDate(c.data)}</p></div>
+      ${CameraHelper.htmlDetailThumbs('coletas', c.id)}
     `;
     const footer = `
       <div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">
@@ -80,6 +82,7 @@ const Coleta = {
         <label class="form-label">Valor Medido</label>
         <input class="form-input" id="form-valor" value="${c ? UI.esc(c.valor) : ''}" placeholder="Ex: 42°C / 8 bar">
       </div>
+      ${CameraHelper.htmlFormFotos('coletas', id)}
     `;
     const footer = `
       <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>

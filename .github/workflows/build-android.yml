@@ -58,6 +58,24 @@ jobs:
           fi
           npx cap sync android
 
+      - name: Configure Android App Icons and Permissions
+        run: |
+          RES_DIR="android/app/src/main/res"
+          for dir in "$RES_DIR"/mipmap-mdpi "$RES_DIR"/mipmap-hdpi "$RES_DIR"/mipmap-xhdpi "$RES_DIR"/mipmap-xxhdpi "$RES_DIR"/mipmap-xxxhdpi; do
+            if [ -d "$dir" ]; then
+              cp -f www/icons/icon-192.png "$dir/ic_launcher.png"
+              cp -f www/icons/icon-192.png "$dir/ic_launcher_round.png"
+              cp -f www/icons/icon-foreground.png "$dir/ic_launcher_foreground.png"
+            fi
+          done
+          if [ -f "$RES_DIR/values/ic_launcher_background.xml" ]; then
+            printf '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">#0A74FF</color>\n</resources>\n' > "$RES_DIR/values/ic_launcher_background.xml"
+          fi
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          if [ -f "$MANIFEST" ] && ! grep -q "android.permission.CAMERA" "$MANIFEST"; then
+            sed -i 's|<uses-permission android:name="android.permission.INTERNET" />|<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />\n    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />\n    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />|' "$MANIFEST"
+          fi
+
       - name: Build Debug APK
         run: |
           cd android

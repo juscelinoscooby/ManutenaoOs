@@ -65,6 +65,7 @@ const Checklists = {
             <span class="badge badge--${ex.statusGeral === 'concluida' ? 'success' : 'info'}">${UI.esc(ex.statusGeral)}</span>
           </div>
           <h3 class="card-os__title">${UI.esc(ex.descricaoAtividade)}</h3>
+          ${CameraHelper.htmlCardThumbs(ex)}
           <div class="card-os__meta">
             <span>📅 ${ex.data} às ${ex.hora}</span>
             <span>👤 ${UI.esc(ex.responsavel || 'Juscelino')}</span>
@@ -189,6 +190,7 @@ const Checklists = {
           ${tarefasHTML}
         </div>
       </div>
+      ${CameraHelper.htmlFormFotos('rotinas_execucoes', null)}
     `;
 
     const footer = `
@@ -263,7 +265,8 @@ const Checklists = {
       <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">
         Relatório formatado para o WhatsApp:
       </p>
-      <textarea id="wa-text-area" class="form-textarea" style="min-height:240px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      <textarea id="wa-text-area" class="form-textarea" style="min-height:180px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      ${CameraHelper.htmlDetailThumbs('rotinas_execucoes', id)}
     `;
 
     const footer = `

@@ -42,6 +42,7 @@ const Atendimentos = {
           </div>
           <h3 class="card-os__title">📍 ${UI.esc(a.local)}</h3>
           <p class="card-os__desc"><strong>Problema:</strong> ${UI.esc(a.problema)}</p>
+          ${CameraHelper.htmlCardThumbs(a)}
         </div>
       `;
     }).join('');
@@ -59,6 +60,7 @@ const Atendimentos = {
       </div>
       <div class="form-group"><label class="form-label">Problema Relatado</label><p>${UI.esc(a.problema)}</p></div>
       <div class="form-group"><label class="form-label">Resumo / Solução</label><p>${UI.esc(a.resumo || 'Nenhum resumo informado')}</p></div>
+      ${CameraHelper.htmlDetailThumbs('atendimentos', a.id)}
     `;
     const footer = `
       <div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">
@@ -112,6 +114,7 @@ const Atendimentos = {
         <label class="form-label">Resumo / Solução (opcional)</label>
         <textarea class="form-textarea" id="form-resumo" placeholder="O que foi feito / Solução aplicada..." style="min-height:90px">${a ? UI.esc(a.resumo || '') : ''}</textarea>
       </div>
+      ${CameraHelper.htmlFormFotos('atendimentos', id)}
     `;
     const footer = `
       <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>
@@ -179,7 +182,8 @@ const Atendimentos = {
       <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">
         Relatório formatado para o WhatsApp:
       </p>
-      <textarea id="wa-text-area" class="form-textarea" style="min-height:200px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      <textarea id="wa-text-area" class="form-textarea" style="min-height:160px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      ${CameraHelper.htmlDetailThumbs('atendimentos', id)}
     `;
 
     const footer = `
@@ -187,6 +191,7 @@ const Atendimentos = {
         <button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Atendimentos.sendToWhatsApp('${id}')">
           📱 Enviar para o WhatsApp
         </button>
+        ${CameraHelper.botaoFotos('atendimentos', id)}
         <button class="btn btn--secondary btn--full" onclick="Atendimentos.copyToClipboard()">
           📋 Copiar Texto
         </button>

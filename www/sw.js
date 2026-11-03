@@ -1,9 +1,11 @@
-const CACHE_NAME = 'manutencao-os-v1';
+const CACHE_NAME = 'manutencao-os-v2';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './css/styles.css',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
   './js/config.js',
   './js/store.js',
   './js/router.js',

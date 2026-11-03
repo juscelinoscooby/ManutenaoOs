@@ -2,6 +2,8 @@
 
 const Router = {
   currentRoute: null,
+  routeHistory: [],
+  _isGoingBack: false,
   modules: {},
 
   /** Register a module for a route */
@@ -27,7 +29,18 @@ const Router = {
       return;
     }
 
+    if (this.currentRoute && this.currentRoute !== hash && !this._isGoingBack) {
+      this.routeHistory.push(this.currentRoute);
+      if (this.routeHistory.length > 20) this.routeHistory.shift();
+    }
+    this._isGoingBack = false;
     this.currentRoute = hash;
+
+    // Show/hide topbar back button
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+      backBtn.classList.toggle('hidden', hash === 'dashboard');
+    }
 
     // Update topbar title
     document.getElementById('page-title').textContent = routeInfo.title;
@@ -88,6 +101,18 @@ const Router = {
   /** Navigate to a route */
   go(route) {
     window.location.hash = route;
+  },
+
+  /** Navigate back to previous route or dashboard */
+  back() {
+    if (this.routeHistory.length > 0) {
+      const prev = this.routeHistory.pop();
+      this._isGoingBack = true;
+      window.location.hash = prev;
+    } else if (this.currentRoute !== 'dashboard') {
+      this._isGoingBack = true;
+      window.location.hash = 'dashboard';
+    }
   },
 };
 

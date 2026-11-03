@@ -7,10 +7,11 @@ const Relatorios = {
         <span class="tab active" data-filter="all">Todos</span>
         <span class="tab" data-filter="Mensal">Mensais</span>
         <span class="tab" data-filter="Semanal">Semanais</span>
+        <span class="tab" data-filter="Diário">Diários</span>
       </div>
       <div style="display:flex;gap:var(--space-sm);margin-bottom:var(--space-md)">
-        <button class="btn btn--secondary" style="flex:1;min-height:36px;font-size:.8rem" onclick="ExportHelper.exportarCSV('relatorios')">📊 Exportar CSV</button>
-        <button class="btn btn--secondary" style="flex:1;min-height:36px;font-size:.8rem" onclick="ExportHelper.imprimirRelatorio('Relatórios de Manutenção')">🖨️ Imprimir</button>
+        <button class="btn btn--primary" style="flex:1;min-height:38px;font-size:.8rem" onclick="ExportHelper.gerarPDFColecao('relatorios')">📄 Gerar PDF (c/ Fotos)</button>
+        <button class="btn btn--secondary" style="flex:1;min-height:38px;font-size:.8rem" onclick="ExportHelper.exportarCSV('relatorios')">📊 Exportar CSV</button>
       </div>
       <div id="rel-list"></div>
       ${UI.fab('➕', 'Relatorios.openForm()')}
@@ -33,6 +34,7 @@ const Relatorios = {
     const list = Store.getAll('relatorios');
     const filtered = filter === 'all' ? list : list.filter(r => r.tipo === filter);
     const container = document.getElementById('rel-list');
+    if (!container) return;
     if (filtered.length === 0) {
       container.innerHTML = UI.emptyState('📄', 'Nenhum relatório encontrado');
       return;
@@ -44,7 +46,13 @@ const Relatorios = {
           ${UI.statusBadge(r.status)}
         </div>
         <h3 class="card-os__title">${UI.esc(r.titulo)}</h3>
-        <div class="card-os__meta"><span>📅 ${UI.esc(r.periodo)}</span><span>🕐 ${UI.formatDateShort(r.data)}</span></div>
+        ${r.descricao ? `<p class="card-os__desc">${UI.esc(r.descricao)}</p>` : ''}
+        ${CameraHelper.htmlCardThumbs(r)}
+        <div class="card-os__meta">
+          <span>📅 ${UI.esc(r.periodo)}</span>
+          <span>🕐 ${UI.formatDateShort(r.data)}</span>
+          <span>📷 ${(r.fotos && r.fotos.length) ? r.fotos.length + ' foto(s)' : 'Sem fotos'}</span>
+        </div>
       </div>
     `).join('');
   },
@@ -58,11 +66,18 @@ const Relatorios = {
       <div class="form-group"><label class="form-label">Período</label><p>${UI.esc(r.periodo)}</p></div>
       <div class="form-group"><label class="form-label">Status</label>${UI.statusBadge(r.status)}</div>
       <div class="form-group"><label class="form-label">Data</label><p>${UI.formatDate(r.data)}</p></div>
+      ${r.descricao ? `<div class="form-group"><label class="form-label">Descrição / Observações</label><p>${UI.esc(r.descricao)}</p></div>` : ''}
+      ${CameraHelper.htmlDetailThumbs('relatorios', r.id)}
     `;
     const footer = `
-      <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Fechar</button>
-      <button class="btn btn--primary" onclick="UI.closeModal();Relatorios.openForm('${r.id}')">Editar</button>
-      <button class="btn btn--danger" onclick="UI.closeModal();Relatorios.remove('${r.id}')">🗑</button>
+      <div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">
+        ${CameraHelper.botaoFotos('relatorios', r.id)}
+        <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs)">
+          <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Fechar</button>
+          <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal();Relatorios.openForm('${r.id}')">Editar</button>
+          <button class="btn btn--danger" onclick="UI.closeModal();Relatorios.remove('${r.id}')">🗑</button>
+        </div>
+      </div>
     `;
     UI.showModal(r.titulo, body, footer);
   },
@@ -80,12 +95,12 @@ const Relatorios = {
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Título</label>
+        <label class="form-label">Título *</label>
         <input class="form-input" id="form-titulo" value="${r ? UI.esc(r.titulo) : ''}" placeholder="Título do relatório">
       </div>
       <div class="form-group">
         <label class="form-label">Período</label>
-        <input class="form-input" id="form-periodo" value="${r ? UI.esc(r.periodo) : ''}" placeholder="Ex: Out/2024">
+        <input class="form-input" id="form-periodo" value="${r ? UI.esc(r.periodo) : ''}" placeholder="Ex: Nov/2026">
       </div>
       <div class="form-group">
         <label class="form-label">Status</label>
@@ -95,6 +110,11 @@ const Relatorios = {
           <option value="concluido" ${r && r.status === 'concluido' ? 'selected' : ''}>Concluído</option>
         </select>
       </div>
+      <div class="form-group">
+        <label class="form-label">Descrição / Observações</label>
+        <textarea class="form-textarea" id="form-descricao" placeholder="Detalhes do relatório...">${r ? UI.esc(r.descricao || '') : ''}</textarea>
+      </div>
+      ${CameraHelper.htmlFormFotos('relatorios', id)}
     `;
     const footer = `
       <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>
@@ -109,25 +129,33 @@ const Relatorios = {
       titulo: document.getElementById('form-titulo').value.trim(),
       periodo: document.getElementById('form-periodo').value.trim(),
       status: document.getElementById('form-status').value,
+      descricao: document.getElementById('form-descricao')?.value.trim() || '',
+      data: new Date().toISOString()
     };
     if (!data.titulo) { UI.toast('Informe o título', 'error'); return; }
+    let saved;
     if (id) {
-      Store.update('relatorios', id, data);
+      saved = Store.update('relatorios', id, data);
       UI.toast('Relatório atualizado', 'success');
     } else {
-      Store.create('relatorios', data);
+      saved = Store.create('relatorios', data);
       UI.toast('Relatório criado', 'success');
     }
     UI.closeModal();
     const active = document.querySelector('#rel-tabs .tab.active');
     this.renderList(active ? active.dataset.filter : 'all');
+    if (saved && saved.id) {
+      setTimeout(() => this.openDetail(saved.id), 280);
+    }
   },
 
   remove(id) {
-    Store.delete('relatorios', id);
-    UI.toast('Relatório removido', 'success');
-    const active = document.querySelector('#rel-tabs .tab.active');
-    this.renderList(active ? active.dataset.filter : 'all');
+    UI.confirm('Deseja excluir este relatório?', () => {
+      Store.delete('relatorios', id);
+      UI.toast('Relatório removido', 'success');
+      const active = document.querySelector('#rel-tabs .tab.active');
+      this.renderList(active ? active.dataset.filter : 'all');
+    });
   },
 };
 

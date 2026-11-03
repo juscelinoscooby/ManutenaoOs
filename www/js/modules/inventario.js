@@ -40,6 +40,7 @@ const Inventario = {
         '<span>🕐 ' + (i.data ? UI.formatDateShort(i.data) : '') + '</span>' +
         '</div>' +
         '<h3 class="card-os__title">📦 ' + UI.esc(i.descricao || '') + '</h3>' +
+        CameraHelper.htmlCardThumbs(i) +
         '</div>';
     }).join('');
   },
@@ -56,7 +57,8 @@ const Inventario = {
     ).join('');
 
     const body = '<div class="form-group"><label class="form-label">Descrição do Inventário</label><p style="font-weight:600">' + UI.esc(i.descricao || '') + '</p></div>' +
-      '<div class="form-group"><label class="form-label">Itens (' + (i.itens ? i.itens.length : 0) + ')</label>' + itensHTML + '</div>';
+      '<div class="form-group"><label class="form-label">Itens (' + (i.itens ? i.itens.length : 0) + ')</label>' + itensHTML + '</div>' +
+      CameraHelper.htmlDetailThumbs('inventario', i.id);
 
     const footer = '<div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">' +
       '<button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Inventario.shareWhatsApp(\'' + i.id + '\')">📱 Enviar para o WhatsApp</button>' +
@@ -108,7 +110,8 @@ const Inventario = {
     const body = '<div class="form-group"><label class="form-label">Descrição do Inventário *</label><input class="form-input" id="form-descricao" value="' + (i ? UI.esc(i.descricao) : '') + '" placeholder="Ex: Setor Elétrico"></div>' +
       '<div class="form-group" style="margin-top:var(--space-md)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-xs)"><label class="form-label" style="margin:0">Itens do Inventário</label>' +
       '<button type="button" class="btn btn--primary" style="font-size:.8rem;padding:4px 10px;min-height:32px" onclick="Inventario.addItemRow()">+ Adicionar Item</button></div>' +
-      '<div id="itens-container" style="max-height:280px;overflow-y:auto;padding-right:4px">' + itensRows + '</div></div>' +
+      '<div id="itens-container" style="max-height:240px;overflow-y:auto;padding-right:4px">' + itensRows + '</div></div>' +
+      CameraHelper.htmlFormFotos('inventario', id) +
       '<input type="hidden" id="form-data" value="' + (i ? UI.esc(i.data) : hoje) + '">';
 
     const footer = '<button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>' +
@@ -164,9 +167,11 @@ const Inventario = {
     if (!i) return;
     const formattedText = this.formatWhatsApp(i);
     const body = '<p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">Relatório formatado para o WhatsApp:</p>' +
-      '<textarea id="wa-text-area" class="form-textarea" style="min-height:220px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>' + UI.esc(formattedText) + '</textarea>';
+      '<textarea id="wa-text-area" class="form-textarea" style="min-height:160px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>' + UI.esc(formattedText) + '</textarea>' +
+      CameraHelper.htmlDetailThumbs('inventario', i.id);
     const footer = '<div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">' +
       '<button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Inventario.sendToWhatsApp(\'' + i.id + '\')">📱 Enviar para o WhatsApp</button>' +
+      CameraHelper.botaoFotos('inventario', i.id) +
       '<button class="btn btn--secondary btn--full" onclick="Inventario.copyToClipboard()">📋 Copiar Texto</button>' +
       '<button class="btn btn--ghost btn--full" onclick="UI.closeModal()">Fechar</button></div>';
     UI.showModal('📱 Relatório de Inventário', body, footer);

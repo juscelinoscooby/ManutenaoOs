@@ -32,14 +32,17 @@ const UI = {
 
   /** Show a bottom-sheet modal */
   showModal(title, bodyHTML, footerHTML = '') {
-    this.closeModal();
+    this.closeModal(true);
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.id = 'modal-overlay';
     overlay.innerHTML = `
       <div class="modal">
         <div class="modal__header">
-          <h3>${title}</h3>
+          <div class="modal__header-left">
+            <button class="modal__back" onclick="UI.closeModal()" title="Voltar">⬅ Voltar</button>
+            <h3>${title}</h3>
+          </div>
           <button class="modal__close" onclick="UI.closeModal()">✕</button>
         </div>
         <div class="modal__body">${bodyHTML}</div>
@@ -53,11 +56,15 @@ const UI = {
     });
   },
 
-  closeModal() {
+  closeModal(immediate = false) {
     const el = document.getElementById('modal-overlay');
     if (el) {
-      el.classList.remove('show');
-      setTimeout(() => el.remove(), 250);
+      if (immediate) {
+        el.remove();
+      } else {
+        el.classList.remove('show');
+        setTimeout(() => el.remove(), 250);
+      }
     }
   },
 
@@ -103,52 +110,91 @@ const UI = {
     return `<button class="btn btn--fab" onclick="${onclick}">${icon}</button>`;
   },
 
-  /** Bind sidebar toggle and overlay */
+  /** Bind sidebar toggle, back buttons and overlay */
   bindGlobal() {
     document.getElementById('menu-btn').addEventListener('click', () => this.toggleSidebar());
     document.getElementById('overlay').addEventListener('click', () => this.closeSidebar());
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => Router.back());
+    }
     document.getElementById('sync-btn').addEventListener('click', () => {
       this.openBackupModal();
     });
+
+    // Suporte ao botão físico/gesto de Voltar no Android (Capacitor)
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+      window.Capacitor.Plugins.App.addListener('backButton', () => {
+        const modal = document.getElementById('modal-overlay');
+        const sidebar = document.getElementById('sidebar');
+        if (modal) {
+          this.closeModal();
+        } else if (sidebar && sidebar.classList.contains('open')) {
+          this.closeSidebar();
+        } else if (Router.currentRoute && Router.currentRoute !== 'dashboard') {
+          Router.back();
+        } else {
+          window.Capacitor.Plugins.App.exitApp();
+        }
+      });
+    }
   },
 
-  /** Modal de Backup, Restauração e Exportação */
+  /** Modal de Backup, Restauração, Exportação e PDF */
   openBackupModal() {
     const body = `
       <div style="display:flex;flex-direction:column;gap:var(--space-sm)">
-        <p class="text-sm text-muted">Gerencie os dados salvos no dispositivo, exporte planilhas CSV ou gere cópias de segurança.</p>
-        <button class="btn btn--primary btn--full" onclick="ExportHelper.exportarBackupJSON()">
-          💾 Baixar Backup Completo (JSON)
-        </button>
-        <button class="btn btn--secondary btn--full" onclick="ExportHelper.importarBackupJSON()">
-          📂 Restaurar Backup (JSON)
-        </button>
-        <button class="btn btn--secondary btn--full" onclick="UI.closeModal();ExportHelper.imprimirRelatorio(document.getElementById('page-title')?.textContent || 'Relatório')">
-          🖨️ Imprimir Tela Atual
-        </button>
-        <div class="form-group" style="margin-top:var(--space-sm);margin-bottom:0;border-top:1px solid var(--border);padding-top:var(--space-sm)">
-          <label class="form-label">📊 Exportar Módulo para Excel (CSV)</label>
+        <p class="text-sm text-muted">Gere relatórios em PDF com fotos em miniatura, exporte planilhas CSV ou faça backup dos dados.</p>
+        <div class="form-group" style="margin-bottom:0;background:var(--surface-alt);padding:var(--space-sm);border-radius:var(--radius-sm)">
+          <label class="form-label">📄 Gerar Relatório em PDF (com Fotos em Miniatura)</label>
           <div style="display:flex;gap:var(--space-xs)">
-            <select class="form-select" id="export-csv-collection" style="flex:1">
+            <select class="form-select" id="export-pdf-collection" style="flex:1">
               <option value="atividades">Atividades</option>
               <option value="rotinas_execucoes">Execuções de Rotinas</option>
+              <option value="relatorios">Relatórios</option>
               <option value="vistorias">Vistorias</option>
               <option value="atendimentos">Atendimentos</option>
               <option value="reparos">Reparos</option>
               <option value="inventario">Inventário</option>
               <option value="coletas">Coleta de Dados</option>
-              <option value="relatorios">Relatórios</option>
               <option value="terceiros">Terceiros</option>
             </select>
-            <button class="btn btn--primary" onclick="ExportHelper.exportarCSV(document.getElementById('export-csv-collection').value)">
-              Exportar
+            <button class="btn btn--primary" onclick="ExportHelper.gerarPDFColecao(document.getElementById('export-pdf-collection').value)">
+              📄 Gerar PDF
             </button>
           </div>
+        </div>
+        <div class="form-group" style="margin-bottom:0;background:var(--surface-alt);padding:var(--space-sm);border-radius:var(--radius-sm)">
+          <label class="form-label">📊 Exportar Módulo para Excel (CSV)</label>
+          <div style="display:flex;gap:var(--space-xs)">
+            <select class="form-select" id="export-csv-collection" style="flex:1">
+              <option value="atividades">Atividades</option>
+              <option value="rotinas_execucoes">Execuções de Rotinas</option>
+              <option value="relatorios">Relatórios</option>
+              <option value="vistorias">Vistorias</option>
+              <option value="atendimentos">Atendimentos</option>
+              <option value="reparos">Reparos</option>
+              <option value="inventario">Inventário</option>
+              <option value="coletas">Coleta de Dados</option>
+              <option value="terceiros">Terceiros</option>
+            </select>
+            <button class="btn btn--secondary" onclick="ExportHelper.exportarCSV(document.getElementById('export-csv-collection').value)">
+              CSV
+            </button>
+          </div>
+        </div>
+        <div style="display:flex;gap:var(--space-xs);margin-top:var(--space-xs)">
+          <button class="btn btn--secondary" style="flex:1" onclick="ExportHelper.exportarBackupJSON()">
+            💾 Baixar Backup
+          </button>
+          <button class="btn btn--secondary" style="flex:1" onclick="ExportHelper.importarBackupJSON()">
+            📂 Restaurar Backup
+          </button>
         </div>
       </div>
     `;
     const footer = `<button class="btn btn--secondary btn--full" onclick="UI.closeModal()">Fechar</button>`;
-    this.showModal('↻ Dados, Backup & Exportação', body, footer);
+    this.showModal('📄 PDF, Backup & Exportação', body, footer);
   },
 };
 

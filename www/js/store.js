@@ -44,6 +44,9 @@ const Store = {
     record.id = record.id || this._uid();
     record.createdAt = record.createdAt || new Date().toISOString();
     record.updatedAt = new Date().toISOString();
+    if (window.CameraHelper && CameraHelper._formActive && record.fotos === undefined) {
+      record.fotos = CameraHelper.consumeFormFotos();
+    }
     this._data[collection].unshift(record);
     this._save();
     return record;
@@ -54,6 +57,9 @@ const Store = {
     const list = this._data[collection] || [];
     const idx = list.findIndex(r => r.id === id);
     if (idx === -1) return null;
+    if (window.CameraHelper && CameraHelper._formActive && updates.fotos === undefined) {
+      updates.fotos = CameraHelper.consumeFormFotos();
+    }
     list[idx] = { ...list[idx], ...updates, updatedAt: new Date().toISOString() };
     this._save();
     return list[idx];

@@ -42,6 +42,7 @@ const Reparos = {
           </div>
           <h3 class="card-os__title">📍 ${UI.esc(r.local)}</h3>
           <p class="card-os__desc"><strong>Defeito:</strong> ${UI.esc(r.defeito)}</p>
+          ${CameraHelper.htmlCardThumbs(r)}
         </div>
       `;
     }).join('');
@@ -59,6 +60,7 @@ const Reparos = {
       </div>
       <div class="form-group"><label class="form-label">Defeito</label><p>${UI.esc(r.defeito)}</p></div>
       <div class="form-group"><label class="form-label">Solução Aplicada</label><p>${UI.esc(r.solucao || 'Nenhuma solução informada')}</p></div>
+      ${CameraHelper.htmlDetailThumbs('reparos', r.id)}
     `;
     const footer = `
       <div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">
@@ -116,6 +118,7 @@ const Reparos = {
         <label class="form-label">Solução Aplicada</label>
         <textarea class="form-textarea" id="form-solucao" placeholder="O que foi feito..." style="min-height:90px">${r ? UI.esc(r.solucao || '') : ''}</textarea>
       </div>
+      ${CameraHelper.htmlFormFotos('reparos', id)}
     `;
     const footer = `
       <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>
@@ -181,7 +184,8 @@ const Reparos = {
       <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">
         Relatório formatado para o WhatsApp:
       </p>
-      <textarea id="wa-text-area" class="form-textarea" style="min-height:200px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      <textarea id="wa-text-area" class="form-textarea" style="min-height:160px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      ${CameraHelper.htmlDetailThumbs('reparos', id)}
     `;
 
     const footer = `
@@ -189,6 +193,7 @@ const Reparos = {
         <button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Reparos.sendToWhatsApp('${id}')">
           📱 Enviar para o WhatsApp
         </button>
+        ${CameraHelper.botaoFotos('reparos', id)}
         <button class="btn btn--secondary btn--full" onclick="Reparos.copyToClipboard()">
           📋 Copiar Texto
         </button>

@@ -37,6 +37,7 @@ const Terceiros = {
       '</div>' +
       '<h3 class="card-os__title">' + UI.esc(t.empresa || '') + '</h3>' +
       '<p class="card-os__desc">' + UI.esc(t.servico || '') + '</p>' +
+      CameraHelper.htmlCardThumbs(t) +
       '<div class="card-os__meta">' +
       '<span>📍 ' + UI.esc(t.local || 'N/I') + '</span>' +
       '<span>📅 ' + UI.formatDateShort(t.data || t.prazo || '') + '</span>' +
@@ -56,7 +57,8 @@ const Terceiros = {
       '<div class="form-group"><label class="form-label">Serviço a ser Executado</label><p>' + UI.esc(t.servico || '') + '</p></div>' +
       '<div class="form-row">' +
       '<div class="form-group"><label class="form-label">Data / Hora</label><p>' + UI.formatDateShort(t.data || t.prazo) + (t.hora ? ' às ' + UI.esc(t.hora) : '') + '</p></div>' +
-      '</div>';
+      '</div>' +
+      CameraHelper.htmlDetailThumbs('terceiros', t.id);
 
     const footer =
       '<div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">' +
@@ -89,7 +91,8 @@ const Terceiros = {
       '<option value="concluido" ' + (t && t.status === 'concluido' ? 'selected' : '') + '>Concluído</option>' +
       '</select></div>' +
       '<div class="form-group"><label class="form-label">Data</label><input class="form-input" type="date" id="form-data" value="' + (t ? UI.esc(t.data || '') : hoje) + '"></div>' +
-      '<div class="form-group"><label class="form-label">Hora</label><input class="form-input" type="time" id="form-hora" value="' + (t ? UI.esc(t.hora || '') : horaAtual) + '"></div></div>';
+      '<div class="form-group"><label class="form-label">Hora</label><input class="form-input" type="time" id="form-hora" value="' + (t ? UI.esc(t.hora || '') : horaAtual) + '"></div></div>' +
+      CameraHelper.htmlFormFotos('terceiros', id);
 
     const footer =
       '<button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>' +
@@ -142,11 +145,13 @@ const Terceiros = {
     const formattedText = this.formatWhatsApp(t);
 
     const body = '<p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">Relatório formatado para o WhatsApp:</p>' +
-      '<textarea id="wa-text-area" class="form-textarea" style="min-height:200px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>' + UI.esc(formattedText) + '</textarea>';
+      '<textarea id="wa-text-area" class="form-textarea" style="min-height:160px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>' + UI.esc(formattedText) + '</textarea>' +
+      CameraHelper.htmlDetailThumbs('terceiros', t.id);
 
     const footer =
       '<div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">' +
       '<button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Terceiros.sendToWhatsApp(\'' + t.id + '\')">📱 Enviar para o WhatsApp</button>' +
+      CameraHelper.botaoFotos('terceiros', t.id) +
       '<button class="btn btn--secondary btn--full" onclick="Terceiros.copyToClipboard()">📋 Copiar Texto</button>' +
       '<button class="btn btn--ghost btn--full" onclick="UI.closeModal()">Fechar</button></div>';
 

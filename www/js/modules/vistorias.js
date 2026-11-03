@@ -25,6 +25,7 @@ const Vistorias = {
         </div>
         <h3 class="card-os__title">📍 ${UI.esc(v.local)}</h3>
         <p class="card-os__desc">${UI.esc(v.resumo || 'Sem resumo')}</p>
+        ${CameraHelper.htmlCardThumbs(v)}
       </div>
     `).join('');
   },
@@ -37,6 +38,7 @@ const Vistorias = {
       <div class="form-group"><label class="form-label">Data e Hora</label><p>${UI.esc(v.data)} às ${UI.esc(v.hora || '')}</p></div>
       <div class="form-group"><label class="form-label">Status</label><p>${v.status === 'conforme' ? '✅ Conforme' : '⚠️ Não conforme'}</p></div>
       <div class="form-group"><label class="form-label">Resumo</label><p>${UI.esc(v.resumo || 'Nenhum resumo informado')}</p></div>
+      ${CameraHelper.htmlDetailThumbs('vistorias', v.id)}
     `;
     const footer = `
       <div style="display:flex;flex-direction:column;gap:var(--space-xs);width:100%">
@@ -86,6 +88,7 @@ const Vistorias = {
         <label class="form-label">Resumo (opcional)</label>
         <textarea class="form-textarea" id="form-resumo" placeholder="Resumo da vistoria (opcional)..." style="min-height:100px">${v ? UI.esc(v.resumo || '') : ''}</textarea>
       </div>
+      ${CameraHelper.htmlFormFotos('vistorias', id)}
     `;
     const footer = `
       <button class="btn btn--secondary" style="flex:1" onclick="UI.closeModal()">Cancelar</button>
@@ -150,7 +153,8 @@ const Vistorias = {
       <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:var(--space-sm)">
         Relatório formatado para o WhatsApp:
       </p>
-      <textarea id="wa-text-area" class="form-textarea" style="min-height:180px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      <textarea id="wa-text-area" class="form-textarea" style="min-height:150px;font-family:monospace;font-size:.85rem;background:var(--surface-alt)" readonly>${UI.esc(formattedText)}</textarea>
+      ${CameraHelper.htmlDetailThumbs('vistorias', id)}
     `;
 
     const footer = `
@@ -158,6 +162,7 @@ const Vistorias = {
         <button class="btn btn--primary btn--full" style="background:#25D366;color:#fff" onclick="Vistorias.sendToWhatsApp('${id}')">
           📱 Enviar para o WhatsApp
         </button>
+        ${CameraHelper.botaoFotos('vistorias', id)}
         <button class="btn btn--secondary btn--full" onclick="Vistorias.copyToClipboard()">
           📋 Copiar Texto
         </button>
