@@ -160,8 +160,8 @@ const Atendimentos = {
     const dataHora = `${a.data || ''} ${a.hora || ''}`.trim();
     const statusText = a.status === 'concluido' ? '🟢 Verificado concluído' : '🟠 Verificado ñ concluído';
 
-    let text = `*RELATORIO DE ATENDIMENTO ${localMaiusculo}*\n`;
-    text += `--------------------------------------------------------------\n`;
+    let text = `*RELATÓRIO DE ATENDIMENTO - ${localMaiusculo}*\n`;
+    text += `--------------------\n`;
     text += `${dataHora} | ${statusText}\n`;
     if (a.problema) {
       text += `_${a.problema}_\n`;

@@ -289,7 +289,7 @@ const Checklists = {
   },
 
   formatExecutionWhatsApp(ex) {
-    let text = `-----------------------------------------------------------------\n`;
+    let text = `--------------------\n`;
     text += `*${ex.descricaoAtividade}*\n`;
     text += `*Status:* ${(ex.statusGeral || '').toUpperCase()}\n`;
     text += `*Data e hora:* ${ex.data} ${ex.hora}\n`;
@@ -302,7 +302,7 @@ const Checklists = {
         text += `• ${t.tarefa}: *${(t.status || '').toUpperCase()}*\n`;
       });
     }
-    text += `-----------------------------------------------------------------`;
+    text += `--------------------`;
     return text;
   },
 

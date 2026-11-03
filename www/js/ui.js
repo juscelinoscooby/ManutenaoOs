@@ -110,13 +110,18 @@ const UI = {
     return `<button class="btn btn--fab" onclick="${onclick}">${icon}</button>`;
   },
 
-  /** Bind sidebar toggle, back buttons and overlay */
+  /** Bind sidebar toggle, back buttons, theme toggle and overlay */
   bindGlobal() {
+    this.initTheme();
     document.getElementById('menu-btn').addEventListener('click', () => this.toggleSidebar());
     document.getElementById('overlay').addEventListener('click', () => this.closeSidebar());
     const backBtn = document.getElementById('back-btn');
     if (backBtn) {
       backBtn.addEventListener('click', () => Router.back());
+    }
+    const themeBtn = document.getElementById('theme-btn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => this.toggleTheme());
     }
     document.getElementById('sync-btn').addEventListener('click', () => {
       this.openBackupModal();
@@ -195,6 +200,31 @@ const UI = {
     `;
     const footer = `<button class="btn btn--secondary btn--full" onclick="UI.closeModal()">Fechar</button>`;
     this.showModal('📄 PDF, Backup & Exportação', body, footer);
+  },
+
+  initTheme() {
+    const saved = localStorage.getItem('manutencao_os_theme') || 'light';
+    this._applyTheme(saved);
+  },
+
+  toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('manutencao_os_theme', next);
+    this._applyTheme(next);
+    this.toast(next === 'dark' ? 'Modo escuro ativado 🌙' : 'Modo claro ativado ☀️');
+  },
+
+  _applyTheme(theme) {
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#0f172a' : '#2563eb');
   },
 };
 

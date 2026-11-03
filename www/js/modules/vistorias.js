@@ -133,10 +133,10 @@ const Vistorias = {
     const dataHora = `${v.data || ''} ${v.hora || ''}`.trim();
     const localMaiusculo = (v.local || '').toUpperCase();
 
-    let text = `RELATORIO DE VISTORIA ${localMaiusculo}\n`;
-    text += `-------------------------------------------------------\n`;
-    text += `${dataHora}   |   ${statusEmoji}\n`;
-    text += `-------------------------------------------------------\n`;
+    let text = `*RELATÓRIO DE VISTORIA - ${localMaiusculo}*\n`;
+    text += `--------------------\n`;
+    text += `${dataHora} | ${statusEmoji}\n`;
+    text += `--------------------\n`;
     if (v.resumo && v.resumo.trim()) {
       text += `${v.resumo.trim()}`;
     }

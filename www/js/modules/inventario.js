@@ -152,8 +152,8 @@ const Inventario = {
   },
 
   formatWhatsApp(i) {
-    let text = 'RELATÓRIO DE INVENTÁRIO ' + ((i.descricao || '').toUpperCase()) + '\n';
-    text += '---------------------------------------------------------------------------------------\n';
+    let text = '*RELATÓRIO DE INVENTÁRIO - ' + ((i.descricao || '').toUpperCase()) + '*\n';
+    text += '--------------------\n';
     (i.itens || []).forEach(it => {
       text += '- ' + it.nome + ' | ' + it.local + '\n';
       if (it.descricao && it.descricao.trim()) text += '> ' + it.descricao.trim() + '\n';

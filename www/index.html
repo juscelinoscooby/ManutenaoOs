@@ -23,18 +23,24 @@
         </div>
       </div>
       <nav class="sidebar__nav" id="nav">
+        <div class="sidebar__section-label">Visão Geral</div>
         <a href="#dashboard" class="nav-item active" data-route="dashboard">
           <span class="nav-item__icon">📊</span> Dashboard
         </a>
+        <div class="sidebar__section-label">Operação Diária</div>
         <a href="#atividade" class="nav-item" data-route="atividade">
           <span class="nav-item__icon">📝</span> Registro de Atividade
         </a>
         <a href="#checklists" class="nav-item" data-route="checklists">
           <span class="nav-item__icon">✅</span> Rotinas Diárias
         </a>
-        <a href="#relatorios" class="nav-item" data-route="relatorios">
-          <span class="nav-item__icon">📄</span> Relatórios
+        <a href="#atendimentos" class="nav-item" data-route="atendimentos">
+          <span class="nav-item__icon">🛠️</span> Registro de Atendimentos
         </a>
+        <a href="#reparos" class="nav-item" data-route="reparos">
+          <span class="nav-item__icon">🔧</span> Registro de Reparos
+        </a>
+        <div class="sidebar__section-label">Inspeção & Ativos</div>
         <a href="#vistorias" class="nav-item" data-route="vistorias">
           <span class="nav-item__icon">🔍</span> Vistorias
         </a>
@@ -44,18 +50,16 @@
         <a href="#inventario" class="nav-item" data-route="inventario">
           <span class="nav-item__icon">📦</span> Inventário
         </a>
-        <a href="#atendimentos" class="nav-item" data-route="atendimentos">
-          <span class="nav-item__icon">🛠️</span> Registro de Atendimentos
-        </a>
-        <a href="#reparos" class="nav-item" data-route="reparos">
-          <span class="nav-item__icon">🔧</span> Registro de Reparos
+        <div class="sidebar__section-label">Gestão</div>
+        <a href="#relatorios" class="nav-item" data-route="relatorios">
+          <span class="nav-item__icon">📄</span> Relatórios
         </a>
         <a href="#terceiros" class="nav-item" data-route="terceiros">
           <span class="nav-item__icon">🤝</span> Acompanhamento de Terceiros
         </a>
       </nav>
       <div class="sidebar__footer">
-        <span class="sidebar__version">v1.0.0</span>
+        <span class="sidebar__version">Manutenção OS • v1.1.0</span>
       </div>
     </aside>
 
@@ -72,8 +76,9 @@
           <span id="page-subtitle">Visão geral do sistema</span>
         </div>
         <div class="topbar__actions">
-          <button class="icon-btn" id="sync-btn" aria-label="Sincronizar" title="Sincronizar">↻</button>
-          <div class="avatar" id="user-avatar">J</div>
+          <button class="icon-btn" id="theme-btn" aria-label="Alternar tema" title="Modo Escuro / Claro">🌙</button>
+          <button class="icon-btn" id="sync-btn" aria-label="PDF e Backup" title="PDF, Backup e Exportação">📄</button>
+          <div class="avatar" id="user-avatar" title="Técnico Juscelino">J</div>
         </div>
       </header>
 

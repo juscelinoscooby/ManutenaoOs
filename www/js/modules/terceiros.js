@@ -131,8 +131,8 @@ const Terceiros = {
     const empresaMaiusculo = (t.empresa || '').toUpperCase();
     const dataHora = (t.data || '') + ' às ' + (t.hora || '');
 
-    let text = 'ACOMPANHAMENTO DE TERCEIROS ' + empresaMaiusculo + '\n';
-    text += '-----------------------------------------------------------------------------' + '\n';
+    let text = '*ACOMPANHAMENTO DE TERCEIROS - ' + empresaMaiusculo + '*\n';
+    text += '--------------------\n';
     text += dataHora + '   |   ' + (t.local || 'Não informado') + '\n\n';
     text += (t.servico || '');
     return text;

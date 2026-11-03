@@ -218,7 +218,7 @@ const Atividade = {
     const svLines = a.servicos ? a.servicos.split('\n').filter(s => s.trim()) : [];
 
     let text = `📋 *RELATÓRIO DE ATIVIDADE DE MANUTENÇÃO*\n`;
-    text += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+    text += `━━━━━━━━━━━━━━━━\n`;
     text += `🔹 *Atividade:* ${a.nome || '—'}\n`;
     text += `🏷️ *Tipo:* ${a.tipo || '—'}\n`;
     text += `📌 *Status:* ${statusLabel}\n`;
@@ -249,7 +249,7 @@ const Atividade = {
       text += `1. Nenhum serviço informado\n`;
     }
 
-    text += `\n━━━━━━━━━━━━━━━━━━━━━━`;
+    text += `\n━━━━━━━━━━━━━━━━`;
 
     return text;
   },

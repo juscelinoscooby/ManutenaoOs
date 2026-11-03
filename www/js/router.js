@@ -75,23 +75,39 @@ const Router = {
     }
   },
 
-  /** "Mais" page: grid of all routes */
+  /** "Mais" page: list of all additional modules and actions */
   renderMais(view) {
-    const maisRoutes = ['relatorios', 'vistorias', 'coleta', 'inventario', 'atendimentos', 'reparos', 'terceiros'];
-    let html = '<div class="stat-grid">';
-    maisRoutes.forEach(r => {
-      const info = CONFIG.routes[r];
+    const maisRoutes = [
+      { key: 'relatorios',   bg: 'rgba(99, 102, 241, 0.15)' },
+      { key: 'vistorias',    bg: 'rgba(139, 92, 246, 0.15)' },
+      { key: 'coleta',       bg: 'rgba(6, 182, 212, 0.15)' },
+      { key: 'inventario',   bg: 'rgba(14, 165, 233, 0.15)' },
+      { key: 'atendimentos', bg: 'rgba(245, 158, 11, 0.16)' },
+      { key: 'reparos',      bg: 'rgba(239, 68, 68, 0.14)' },
+      { key: 'terceiros',    bg: 'rgba(20, 184, 166, 0.15)' },
+    ];
+    let html = '<div class="mais-grid">';
+    maisRoutes.forEach(item => {
+      const info = CONFIG.routes[item.key];
       if (!info) return;
       html += `
-        <div class="stat-card" style="cursor:pointer" onclick="window.location.hash='${r}'">
-          <div class="stat-card__icon">${info.icon}</div>
-          <div class="stat-card__label">${info.title}</div>
+        <div class="mais-card" onclick="window.location.hash='${item.key}'">
+          <div class="mais-card__icon" style="background:${item.bg}">${info.icon}</div>
+          <div class="mais-card__info">
+            <div class="mais-card__title">${info.title}</div>
+            <div class="mais-card__sub">${info.subtitle}</div>
+          </div>
+          <span class="mais-card__arrow">›</span>
         </div>`;
     });
     html += `
-      <div class="stat-card" style="cursor:pointer" onclick="UI.openBackupModal()">
-        <div class="stat-card__icon">💾</div>
-        <div class="stat-card__label">Backup e Exportação</div>
+      <div class="mais-card" onclick="UI.openBackupModal()">
+        <div class="mais-card__icon" style="background:rgba(37, 99, 235, 0.15)">📄</div>
+        <div class="mais-card__info">
+          <div class="mais-card__title">PDF, Backup & Exportação CSV</div>
+          <div class="mais-card__sub">Gerar relatórios PDF com fotos em miniatura e cópias de segurança</div>
+        </div>
+        <span class="mais-card__arrow">›</span>
       </div>
     `;
     html += '</div>';

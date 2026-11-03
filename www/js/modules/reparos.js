@@ -165,8 +165,8 @@ const Reparos = {
     const localText = (r.local || '').toUpperCase();
     const dataHora = `${r.data || ''} ${r.hora || ''}`.trim();
 
-    let text = `REPARO ${statusText} - ${defeitoText}\n`;
-    text += `-------------------------------------------------\n`;
+    let text = `*REPARO ${statusText} - ${defeitoText}*\n`;
+    text += `--------------------\n`;
     text += `${dataHora}  /  ${localText}\n`;
     if (r.solucao && r.solucao.trim()) {
       text += `\n_${r.solucao.trim()}_`;
