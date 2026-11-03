@@ -34,7 +34,7 @@ jobs:
         with:
           api-level: 34
           ndk-version: r27b
-          cmdline-tools-version: '11.0'
+          cmdline-tools-version: '13.0'
           packages: 'platform-tools platform;android-34 build-tools;34.0.0'
           accept-android-sdk-licenses: true
 
